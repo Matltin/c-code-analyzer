@@ -1,0 +1,32 @@
+# Virtual environments
+.venv/
+venv/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+pip-*/
+
+# Test and coverage output
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Generated project output
+output/
