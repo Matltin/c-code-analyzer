@@ -51,10 +51,33 @@ class Diagnostic:
         """Return the length of the highlighted source range."""
         return self.span.length
 
+    @property
+    def file(self) -> str:
+        return self.span.start.file
+
+    @property
+    def line(self) -> int:
+        return self.span.start.line
+
+    @property
+    def column(self) -> int:
+        return self.span.start.column
+
+    def to_dict(self) -> dict[str, str | int]:
+        """Return the stable machine-readable representation."""
+        return {
+            "phase": self.phase.value,
+            "severity": self.severity.value,
+            "message": self.message,
+            "file": self.file,
+            "line": self.line,
+            "column": self.column,
+            "length": self.length,
+        }
+
     def __str__(self) -> str:
         position = self.span.start
         return (
             f"{position.file}:{position.line}:{position.column}: "
             f"{self.severity.value}: [{self.phase.value}] {self.message}"
         )
-
