@@ -4,17 +4,27 @@
 زیرمجموعه‌ی مستندشده از زبان C را تحلیل خواهد کرد. زبان پیاده‌سازی Python و
 رابط اصلی CLI است.
 
-نسخه‌ی فعلی **Phase 0** و مشخصات بخش **1.1** را پوشش می‌دهد:
+نسخه‌ی فعلی Front-End و ابزارهای Semantic کامل **Phase 2** را پوشش می‌دهد:
 
 - ساختار نصب‌پذیر Python با روش `src`
-- CLI پایه با Help و Version
 - مدل‌های مشترک Source، Token و Diagnostic
-- `TokenKind`های زیرمجموعه‌ی مستندشده‌ی C
-- جدول‌های read-only مربوط به Keyword، Operator و Delimiter
-- ترتیب قطعی Longest Match برای Operatorها
-- تست‌های خودکار Phase 0 و بخش 1.1
+- Lexer دست‌نویس همراه Error Recovery
+- Grammar رسمی EBNF
+- AST دارای SourceSpan و Printer
+- Recursive Descent Parser همراه Panic-mode
+- Syntax Highlighting مبتنی بر Token و AST
+- Scope Tree و Symbol Table با Namespaceهای جدا
+- Two-pass Name Resolution و Reference Tracking
+- Type Checking و Initialization Tracking محافظه‌کارانه
+- Diagnosticهای متنی و JSON
+- Completion عمومی، Member و Argument-aware
+- Hover و Semantic Highlighting
+- خروجی ANSI و HTML مستقل
+- CLI برای Token، AST، Diagnostic، Symbol، Completion، Hover و Highlight
+- تست‌های خودکار Phase 0، Phase 1 و Phase 2
 
-در این نسخه هنوز Lexer، Tokenization، Parser یا Semantic Analyzer وجود ندارد.
+در این نسخه قابلیت‌های Phase 3 مانند CFG، Call Graph، Go-to-Definition،
+Find References و Safe Rename وجود ندارند.
 
 ## پیش‌نیاز
 
@@ -68,7 +78,28 @@ python -m c_analyzer --version
 c-analyzer --help
 ```
 
-CLI فعلی عمداً هیچ command مربوط به Lexer یا Parser ندارد.
+Commandهای فاز اول:
+
+```bash
+python -m c_analyzer tokens examples/valid/basic.c
+python -m c_analyzer ast examples/valid/basic.c
+python -m c_analyzer check examples/invalid/multiple_errors.c
+python -m c_analyzer highlight examples/valid/basic.c --format ansi
+python -m c_analyzer highlight examples/valid/basic.c --format html
+python -m c_analyzer highlight examples/valid/basic.c --format html --output output.html
+```
+
+Commandهای فاز دوم:
+
+```bash
+python -m c_analyzer symbols examples/semantic/valid/scopes.c
+python -m c_analyzer check examples/semantic/invalid/type_errors.c
+python -m c_analyzer check examples/semantic/invalid/type_errors.c --json
+python -m c_analyzer complete examples/semantic/valid/completion.c 11 27
+python -m c_analyzer hover examples/semantic/valid/hover.c 6 18
+```
+
+فرم کوتاه `c-analyzer ...` نیز پس از نصب Editable قابل استفاده است.
 
 ## اجرای تست‌ها
 
@@ -103,10 +134,20 @@ print(span.length)
 
 - Scope زبان: `docs/supported_c_subset.md`
 - مشخصات Tokenها: `docs/token_specification.md`
+- طراحی Lexer: `docs/lexer.md`
+- Grammar و AST: `docs/ast.md`
+- طراحی Parser: `docs/parser.md`
+- تحلیل Semantic و Symbolها: `docs/semantic_analysis.md`
+- Type System: `docs/type_system.md`
+- Completion و Hover: `docs/intellisense.md`
+- Diagnosticها: `docs/diagnostics.md`
+- معماری: `docs/architecture.md`
+- الگوریتم‌ها: `docs/algorithms.md`
+- راهنمای CLI: `docs/usage.md`
 - محدودیت‌ها: `docs/limitations.md`
 - وضعیت مراحل: `PROJECT_CHECKLIST.md`
 
 ## وضعیت توسعه
 
-Phase 0 تأیید شده و بخش 1.1 برای تست کاربر آماده است. پیاده‌سازی Lexer در بخش
-1.2 فقط پس از تأیید صریح بخش 1.1 انجام خواهد شد.
+Phase 0 و Phase 1 توسط کاربر تأیید شده‌اند. بخش‌های 2.1 تا 2.5 و Phase Gate 2
+برای تست روی Ubuntu کاربر آماده‌اند. Phase 3 شروع نشده است.
