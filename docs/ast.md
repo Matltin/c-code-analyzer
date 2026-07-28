@@ -26,7 +26,7 @@ Grammar رسمی در `grammar/c_subset.ebnf` قرار دارد. برای Recurs
 `Name` علاوه بر متن، Span دقیق همان Identifier را دارد. این تصمیم برای
 Highlighter، Symbol Binding، Go-to-Definition و Rename ضروری است.
 
-## فیلدهای Semantic آینده
+## اتصال Semantic بدون بازنویسی AST
 
 تمام Nodeها دو فیلد خالی دارند:
 
@@ -35,11 +35,12 @@ inferred_type = None
 symbol_id = None
 ```
 
-در فاز اول هیچ Type Checking یا Symbol Resolution انجام نمی‌شود.
+این فیلدها برای سازگاری حفظ شده‌اند، اما فاز دوم برای جلوگیری از Mutate کردن
+AST پایدار، Type و Binding واقعی را در `SemanticModel` و Side Tableها نگه
+می‌دارد. APIهای `type_of(node)` و `symbol_of(node)` اطلاعات را برمی‌گردانند.
 
 ## AST Printer
 
 Printer با ترتیب فیلدهای dataclass کار می‌کند و Span و فیلدهای Semantic را
 برای خوانایی نمایش نمی‌دهد. خروجی آن قطعی است و در CLI و تست‌ها استفاده
 خواهد شد.
-
