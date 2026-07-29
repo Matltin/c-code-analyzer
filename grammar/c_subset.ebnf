@@ -1,0 +1,90 @@
+(* c-code-analyzer documented C subset.
+   Repetition is iterative and the grammar has no left recursion. *)
+
+translation_unit     = { external_declaration }, EOF ;
+external_declaration = struct_definition
+                     | function_definition
+                     | function_prototype
+                     | variable_declaration ;
+
+function_definition  = type_ref, IDENTIFIER, "(", parameter_list_opt, ")", block ;
+function_prototype   = type_ref, IDENTIFIER, "(", parameter_list_opt, ")", ";" ;
+parameter_list_opt   = [ "void" | parameter_list ] ;
+parameter_list       = parameter, { ",", parameter } ;
+parameter            = type_ref, IDENTIFIER, [ array_parameter_suffix ] ;
+array_parameter_suffix = "[", "]" ;
+
+struct_definition    = "struct", IDENTIFIER, "{", { field_declaration }, "}", ";" ;
+field_declaration    = type_ref, IDENTIFIER, [ array_suffix ], ";" ;
+
+variable_declaration = type_ref, IDENTIFIER, [ array_suffix ],
+                       [ "=", initializer ], ";" ;
+type_ref             = type_specifier, [ "*" ] ;
+type_specifier       = "int" | "float" | "double" | "char" | "void"
+                     | "struct", IDENTIFIER ;
+array_suffix         = "[", INTEGER_LITERAL, "]" ;
+
+initializer          = assignment_expression | initializer_list ;
+initializer_list     = "{", [ assignment_expression,
+                              { ",", assignment_expression }, [ "," ] ], "}" ;
+
+block                = "{", { block_item }, "}" ;
+block_item           = variable_declaration | statement ;
+statement            = block
+                     | empty_statement
+                     | expression_statement
+                     | if_statement
+                     | while_statement
+                     | for_statement
+                     | return_statement
+                     | break_statement
+                     | continue_statement ;
+
+empty_statement      = ";" ;
+expression_statement = expression, ";" ;
+if_statement         = "if", "(", expression, ")", statement,
+                       [ "else", statement ] ;
+while_statement      = "while", "(", expression, ")", statement ;
+for_statement        = "for", "(", for_initializer,
+                       [ expression ], ";", [ expression ], ")", statement ;
+for_initializer      = variable_declaration | [ expression ], ";" ;
+return_statement     = "return", [ expression ], ";" ;
+break_statement      = "break", ";" ;
+continue_statement   = "continue", ";" ;
+
+expression            = assignment_expression ;
+assignment_expression = logical_or_expression,
+                        [ assignment_operator, assignment_expression ] ;
+assignment_operator   = "=" | "+=" | "-=" | "*=" | "/=" | "%=" ;
+
+logical_or_expression  = logical_and_expression,
+                         { "||", logical_and_expression } ;
+logical_and_expression = equality_expression,
+                         { "&&", equality_expression } ;
+equality_expression    = relational_expression,
+                         { ( "==" | "!=" ), relational_expression } ;
+relational_expression  = additive_expression,
+                         { ( "<" | "<=" | ">" | ">=" ), additive_expression } ;
+additive_expression    = multiplicative_expression,
+                         { ( "+" | "-" ), multiplicative_expression } ;
+multiplicative_expression = unary_expression,
+                            { ( "*" | "/" | "%" ), unary_expression } ;
+
+unary_expression      = ( "+" | "-" | "!" | "&" | "*" | "++" | "--" ),
+                        unary_expression
+                      | postfix_expression ;
+postfix_expression    = primary_expression, { postfix_suffix } ;
+postfix_suffix        = "(", argument_list_opt, ")"
+                      | "[", expression, "]"
+                      | ( "." | "->" ), IDENTIFIER
+                      | "++"
+                      | "--" ;
+argument_list_opt     = [ assignment_expression,
+                          { ",", assignment_expression } ] ;
+primary_expression    = IDENTIFIER
+                      | INTEGER_LITERAL
+                      | FLOAT_LITERAL
+                      | STRING_LITERAL
+                      | CHAR_LITERAL
+                      | "(", expression, ")" ;
+
