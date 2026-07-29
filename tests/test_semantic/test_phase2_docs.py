@@ -38,9 +38,9 @@ def test_checklist_matches_user_confirmation_boundaries() -> None:
 
     assert "### [x] Phase Gate 1" in text
     for section in ("2.1", "2.2", "2.3", "2.4", "2.5"):
-        assert f"### [?] {section}" in text
-    assert "### [?] Phase Gate 2" in text
-    assert "### [ ] 3.1" in text
+        assert f"### [x] {section}" in text
+    assert "### [x] Phase Gate 2" in text
+    assert "### [?] 3.1" in text
 
 
 def test_no_phase_three_package_was_created() -> None:
@@ -50,4 +50,3 @@ def test_no_phase_three_package_was_created() -> None:
     assert not (package / "call_graph").exists()
     assert not (package / "navigation").exists()
     assert not (package / "rename").exists()
-
