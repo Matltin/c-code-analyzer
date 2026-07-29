@@ -237,4 +237,4 @@ Preprocessor Directive فقط یک Token می‌شود تا:
 - Parser بخش ۱.۴ همان Token Stream مشترک را مصرف می‌کند.
 - Highlighter و CLI بخش ۱.۵ برای دسته‌بندی و نمایش Tokenها از همین قرارداد
   استفاده می‌کنند.
-- Semantic Analysis و سایر قابلیت‌های Phase 2 هنوز پیاده‌سازی نشده‌اند.
+- Semantic Analysis فاز دوم نیز همین TokenKind و Spanها را مصرف می‌کند.
