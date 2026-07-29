@@ -4,7 +4,7 @@
 زیرمجموعه‌ی مستندشده از زبان C را تحلیل خواهد کرد. زبان پیاده‌سازی Python و
 رابط اصلی CLI است.
 
-نسخه‌ی فعلی Front-End و ابزارهای Semantic کامل **Phase 2** را پوشش می‌دهد:
+نسخه‌ی فعلی تمام قابلیت‌های الزامی **Phase 3** را برای بررسی Ubuntu پوشش می‌دهد:
 
 - ساختار نصب‌پذیر Python با روش `src`
 - مدل‌های مشترک Source، Token و Diagnostic
@@ -21,10 +21,13 @@
 - Hover و Semantic Highlighting
 - خروجی ANSI و HTML مستقل
 - CLI برای Token، AST، Diagnostic، Symbol، Completion، Hover و Highlight
-- تست‌های خودکار Phase 0، Phase 1 و Phase 2
-
-در این نسخه قابلیت‌های Phase 3 مانند CFG، Call Graph، Go-to-Definition،
-Find References و Safe Rename وجود ندارند.
+- Project Index چندفایلی، Navigation و Documentation Comment
+- CFG با خروجی text، JSON و DOT و Validator داخلی
+- Definite Assignment، Liveness، Dead Code و Missing Return
+- Call Graph، Reachability، Recursion و Tarjan SCC
+- Safe Rename مبتنی بر Symbol ID با Preview، بازتحلیل و Apply اتمیک
+- CLI نهایی و REPL قابل‌آزمایش با Stream تزریقی
+- تست‌های Regression از Phase 0 تا Phase 3
 
 ## پیش‌نیاز
 
@@ -99,6 +102,22 @@ python -m c_analyzer complete examples/semantic/valid/completion.c 11 27
 python -m c_analyzer hover examples/semantic/valid/hover.c 6 18
 ```
 
+Commandهای فاز سوم روی Project نمونه:
+
+```bash
+python -m c_analyzer project-check examples/project
+python -m c_analyzer goto-def examples/project/main.c 6 17 --project examples/project
+python -m c_analyzer find-refs examples/project/main.c 6 17 --project examples/project
+python -m c_analyzer show-cfg examples/project/main.c main --project examples/project --format text
+python -m c_analyzer callgraph examples/project --entry main --format text
+python -m c_analyzer dead-code examples/project
+python -m c_analyzer rename examples/project/main.c 6 9 result --project examples/project
+python -m c_analyzer repl examples/project
+```
+
+Rename پیش‌فرض Dry-run است. فقط افزودن `--apply` فایل‌ها را پس از Conflict
+Check و بازتحلیل کامل، به‌صورت اتمیک تغییر می‌دهد.
+
 فرم کوتاه `c-analyzer ...` نیز پس از نصب Editable قابل استفاده است.
 
 ## اجرای تست‌ها
@@ -144,10 +163,18 @@ print(span.length)
 - معماری: `docs/architecture.md`
 - الگوریتم‌ها: `docs/algorithms.md`
 - راهنمای CLI: `docs/usage.md`
+- تحلیل Project: `docs/project_analysis.md`
+- Navigation: `docs/navigation.md`
+- CFG: `docs/cfg.md`
+- Data-flow: `docs/dataflow.md`
+- Call Graph: `docs/callgraph.md`
+- Safe Rename: `docs/refactoring.md`
+- REPL: `docs/repl.md`
 - محدودیت‌ها: `docs/limitations.md`
 - وضعیت مراحل: `PROJECT_CHECKLIST.md`
 
 ## وضعیت توسعه
 
-Phase 0 و Phase 1 توسط کاربر تأیید شده‌اند. بخش‌های 2.1 تا 2.5 و Phase Gate 2
-برای تست روی Ubuntu کاربر آماده‌اند. Phase 3 شروع نشده است.
+Phase 0، Phase 1 و Phase 2 توسط کاربر تأیید شده‌اند. بخش‌های 3.1 تا 3.5 و
+Phase Gate 3 با وضعیت `[?]` برای تست نهایی روی Ubuntu کاربر آماده‌اند. Bonus
+شروع نشده است.
