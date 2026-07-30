@@ -217,7 +217,7 @@
 
 ## Phase 3 — Program Analysis و IDE Features
 
-### [?] 3.1 — Project Index، Navigation و Multi-file Analysis
+### [x] 3.1 — Project Index، Navigation و Multi-file Analysis
 
 - API مستقل Mapping مسیر به Source
 - Pathهای Normalized و ترتیب قطعی فایل‌ها
@@ -231,7 +231,7 @@
 - API تک‌فایلی و عدم نشت State
 - آماده‌ی تست Ubuntu کاربر
 
-### [?] 3.2 — Control Flow Graph
+### [x] 3.2 — Control Flow Graph
 
 - `ControlFlowGraph`، `BasicBlock` و `CFGEdge`
 - ENTRY و EXIT یکتا و ID قطعی
@@ -245,7 +245,7 @@
 - عدم تغییر AST و Semantic Model
 - آماده‌ی تست Ubuntu کاربر
 
-### [?] 3.3 — Data-flow Analysis و Dead Code
+### [x] 3.3 — Data-flow Analysis و Dead Code
 
 - Worklist Solver قطعی تا Fixed Point
 - State مبتنی بر Symbol ID
@@ -259,7 +259,7 @@
 - Dedup با Diagnosticهای Phase 2
 - آماده‌ی تست Ubuntu کاربر
 
-### [?] 3.4 — Call Graph
+### [x] 3.4 — Call Graph
 
 - Nodeهای Defined، Built-in و External
 - Edge مستقیم همراه تمام Call Siteها
@@ -272,7 +272,7 @@
 - Function Pointer و Indirect Call خارج از Scope
 - آماده‌ی تست Ubuntu کاربر
 
-### [?] 3.5 — Safe Rename، CLI و REPL
+### [x] 3.5 — Safe Rename، CLI و REPL
 
 - Rename مبتنی بر Source Location و Symbol ID
 - Identifier، Keyword، Conflict و Capture/Shadowing Check
@@ -289,7 +289,7 @@
 - Example Project چندفایلی
 - آماده‌ی تست Ubuntu کاربر
 
-### [?] Phase Gate 3
+### [x] Phase Gate 3
 
 - اجرای تمام قابلیت‌های الزامی از طریق CLI
 - تست چند فایل نمونه
@@ -303,8 +303,60 @@
 - بدون قابلیت Bonus
 - آماده‌ی تست Ubuntu کاربر
 
-## Bonus
+## Bonus زیرساختی
 
-### [ ] خارج از Scope تا پایان سه Phase اصلی
+### [?] B1 — Coverage حداقل ۸۰٪
 
-- هیچ قابلیت Bonus پیش از تأیید کامل Phase 3 شروع نمی‌شود.
+- `pytest-cov` در Dependencyهای توسعه
+- Line و Branch Coverage
+- Gate قطعی `80%` در `pyproject.toml`
+- گزارش Terminal، XML و HTML
+- Targetهای `coverage` و `coverage-html` در Makefile
+- مستند `docs/coverage.md`
+- آمادهٔ اجرای محلی کاربر
+
+### [?] B2 — Docker
+
+- Dockerfile چندمرحله‌ای
+- Runtime غیرـRoot و بدون Dependencyهای تست
+- Test Stage مستقل
+- `.dockerignore` کامل
+- Build، Smoke و Test Target در Makefile
+- تست ساختاری و مستند `docs/docker.md`
+- نیازمند اجرای واقعی Docker روی Ubuntu کاربر
+
+### [?] B3 — GitHub Actions CI/CD
+
+- اجرای Push، Pull Request و دستی
+- Matrix روی Python 3.10 و 3.12
+- Compile و تمام تست‌ها
+- Coverage Gate و Artifactهای Coverage/Highlight
+- Permission حداقلی و بدون Secret Hard-code
+- مستند `docs/ci_cd.md`
+- نیازمند Push و Run واقعی GitHub
+
+### [?] GitHub Pages
+
+- Site ایستای Coverage، Highlight و README
+- Build محلی با Makefile
+- Workflow مستقل Build و Deploy
+- Permission حداقلی و Concurrency
+- مستند `docs/github_pages.md`
+- نیازمند انتشار واقعی GitHub
+
+### [?] Bonus Gate
+
+- Regression کامل Phase 0 تا Phase 3
+- Coverage حداقل ۸۰٪
+- تست‌های ساختاری Docker، CI و Pages
+- Site محلی و لینک‌های داخلی معتبر
+- Archive بدون Cache، Coverage و Site تولیدشده
+- Docker و سرویس‌های GitHub تا اجرای کاربر در وضعیت بررسی می‌مانند
+
+### [ ] Bonusهای پیشرفته خارج از Scope
+
+- Multi-language و تشخیص خودکار زبان
+- Preprocessor Expansion
+- Incremental Parsing
+- Dominator و Dominance Frontier
+- SSA

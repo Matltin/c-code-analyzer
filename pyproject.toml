@@ -11,7 +11,10 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=6.0",
+]
 
 [project.scripts]
 c-analyzer = "c_analyzer.cli:main"
@@ -27,3 +30,19 @@ addopts = [
     "--strict-markers",
 ]
 
+[tool.coverage.run]
+branch = true
+source = ["src/c_analyzer"]
+relative_files = true
+
+[tool.coverage.report]
+fail_under = 80
+precision = 2
+show_missing = true
+skip_covered = false
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"
