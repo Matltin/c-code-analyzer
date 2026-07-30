@@ -50,12 +50,14 @@ def test_example_project_has_exact_required_files_and_features() -> None:
         assert feature in combined
 
 
-def test_checklist_uses_user_review_state_and_bonus_is_unstarted() -> None:
+def test_checklist_records_phase_three_confirmation_and_bonus_review() -> None:
     text = (ROOT / "PROJECT_CHECKLIST.md").read_text(encoding="utf-8")
 
     for section in ("3.1", "3.2", "3.3", "3.4", "3.5"):
-        assert f"### [?] {section}" in text
-    assert "### [?] Phase Gate 3" in text
-    assert "### [ ] خارج از Scope" in text
+        assert f"### [x] {section}" in text
+    assert "### [x] Phase Gate 3" in text
+    assert "### [?] B1" in text
+    assert "### [?] B2" in text
+    assert "### [?] B3" in text
+    assert "### [ ] Bonusهای پیشرفته" in text
     assert "### [x] Phase Gate 2" in text
-
