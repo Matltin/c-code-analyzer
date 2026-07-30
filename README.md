@@ -29,6 +29,10 @@
 - CLI نهایی و REPL قابل‌آزمایش با Stream تزریقی
 - تست‌های Regression از Phase 0 تا Phase 3
 
+Phase 0 تا Phase 3 با اجرای `244 passed` روی Ubuntu کاربر تأیید شده‌اند.
+زیرساخت‌های Bonus شامل Coverage، Docker، GitHub Actions و GitHub Pages اکنون
+با وضعیت `[?]` آمادهٔ بررسی هستند.
+
 ## پیش‌نیاز
 
 - Linux
@@ -134,6 +138,44 @@ python -m pytest
 python -m pytest -vv
 ```
 
+## Coverage و Bonus Gate
+
+بعد از نصب Dependencyهای توسعه:
+
+```bash
+make coverage
+make bonus-gate
+```
+
+`make coverage` همهٔ تست‌ها را با Line/Branch Coverage اجرا می‌کند و نتیجهٔ
+کمتر از ۸۰٪ را Fail می‌کند. `make bonus-gate` علاوه بر Regression و Coverage،
+Site و تست‌های ساختاری زیرساخت را هم بررسی می‌کند. اگر Docker نصب نباشد، بخش
+Docker با پیام واضح `PENDING` باقی می‌ماند.
+
+## Docker
+
+روی Ubuntu دارای Docker:
+
+```bash
+make docker-build
+make docker-smoke
+make docker-test
+```
+
+Runtime با User غیرـRoot اجرا می‌شود و ابزارهای تست داخل Image نهایی نصب
+نمی‌شوند. جزئیات و دستور Mount فقط‌خواندنی در `docs/docker.md` آمده است.
+
+## Site محلی و GitHub Pages
+
+```bash
+make site
+make site-serve
+```
+
+سپس `http://localhost:8000` را باز کنید. Site شامل نمونهٔ Highlight، گزارش
+Coverage و README است. انتشار واقعی توسط Workflow مستقل Pages انجام می‌شود و
+تا اولین اجرای موفق GitHub در وضعیت `[?]` باقی می‌ماند.
+
 ## نمونه‌ی استفاده از مدل‌های Core
 
 ```python
@@ -170,11 +212,16 @@ print(span.length)
 - Call Graph: `docs/callgraph.md`
 - Safe Rename: `docs/refactoring.md`
 - REPL: `docs/repl.md`
+- Coverage: `docs/coverage.md`
+- Docker: `docs/docker.md`
+- GitHub Actions: `docs/ci_cd.md`
+- GitHub Pages: `docs/github_pages.md`
+- Bonus زیرساختی: `docs/bonus.md`
 - محدودیت‌ها: `docs/limitations.md`
 - وضعیت مراحل: `PROJECT_CHECKLIST.md`
 
 ## وضعیت توسعه
 
-Phase 0، Phase 1 و Phase 2 توسط کاربر تأیید شده‌اند. بخش‌های 3.1 تا 3.5 و
-Phase Gate 3 با وضعیت `[?]` برای تست نهایی روی Ubuntu کاربر آماده‌اند. Bonus
-شروع نشده است.
+Phase 0، Phase 1، Phase 2 و Phase 3 توسط کاربر روی Ubuntu تأیید شده‌اند.
+B1 Coverage، B2 Docker، B3 GitHub Actions و GitHub Pages با وضعیت `[?]`
+آمادهٔ تست‌اند. قابلیت‌های پیشرفتهٔ Bonus وارد Scope نشده‌اند.
