@@ -5,6 +5,10 @@ VENV ?= .venv
 PY := $(VENV)/bin/python
 PIP := $(PY) -m pip
 PYTEST := $(PY) -m pytest
+COVERAGE_ARGS := --cov=src/c_analyzer --cov-branch --cov-report=term-missing --cov-report=xml --cov-report=html --cov-fail-under=80
+DOCKER ?= docker
+DOCKER_IMAGE ?= c-code-analyzer:bonus
+DOCKER_TEST_IMAGE ?= c-code-analyzer:test
 
 PROJECT_DIR ?= examples/project
 MAIN_FILE ?= $(PROJECT_DIR)/main.c
@@ -25,6 +29,9 @@ RENAME_TO ?= result
 	test-intellisense test-project test-cfg test-dataflow test-callgraph \
 	test-rename test-cli test-integration test-docs test-error-recovery \
 	test-determinism test-rename-atomic test-json cli-help cli-version \
+	coverage coverage-html coverage-report bonus-coverage \
+	docker-check docker-build docker-help docker-test docker-smoke bonus-docker \
+	site site-serve bonus-site bonus-gate infrastructure-check \
 	tokens ast check-valid check-invalid check-json highlight-ansi \
 	highlight-html symbols complete hover project-check project-check-json \
 	goto-def goto-def-json find-refs find-refs-json cfg-text cfg-json cfg-dot \
@@ -41,10 +48,17 @@ help:
 	@echo "  make install             Reinstall project editable in existing .venv"
 	@echo
 	@echo "Main verification:"
-	@echo "  make test                Run all 244 automated tests"
+	@echo "  make test                Run the complete automated test suite"
 	@echo "  make verify              Compile, run all tests, and run smoke CLI checks"
 	@echo "  make gate3               Run the complete Phase Gate 3"
 	@echo "  make gate-all            Run Phase Gates 0 through 3"
+	@echo "  make coverage            Run tests with branch coverage and 80% gate"
+	@echo "  make docker-build        Build the non-root runtime image"
+	@echo "  make docker-smoke        Run help, version, and project demo in Docker"
+	@echo "  make docker-test         Run the test stage in Docker"
+	@echo "  make site                Build the local GitHub Pages site"
+	@echo "  make site-serve          Serve site/ at http://localhost:8000"
+	@echo "  make bonus-gate          Run the complete infrastructure Bonus gate"
 	@echo
 	@echo "Phase tests:"
 	@echo "  make test-phase0         Core models and initial CLI"
@@ -218,6 +232,64 @@ test-rename-atomic: check-venv
 test-json: check-venv
 	$(PYTEST) -q -k "json"
 
+coverage: check-venv
+	$(PYTEST) $(COVERAGE_ARGS)
+
+coverage-html: check-venv
+	$(PYTEST) --cov=src/c_analyzer --cov-branch --cov-report=html --cov-fail-under=80
+	@echo "HTML coverage: htmlcov/index.html"
+
+coverage-report: check-venv
+	$(PYTEST) --cov=src/c_analyzer --cov-branch --cov-report=term-missing --cov-fail-under=80
+
+bonus-coverage: coverage
+
+docker-check:
+	@command -v "$(DOCKER)" >/dev/null || { \
+		echo "ERROR: Docker is not installed or not available in PATH."; \
+		echo "B2 remains pending until Docker is tested on Ubuntu."; \
+		exit 2; \
+	}
+
+docker-build: docker-check
+	$(DOCKER) build --target runtime -t "$(DOCKER_IMAGE)" .
+
+docker-help: docker-check
+	$(DOCKER) run --rm "$(DOCKER_IMAGE)" --help
+	$(DOCKER) run --rm "$(DOCKER_IMAGE)" --version
+
+docker-smoke: docker-help
+	$(DOCKER) run --rm "$(DOCKER_IMAGE)" project-check examples/project
+
+docker-test: docker-check
+	$(DOCKER) build --target test -t "$(DOCKER_TEST_IMAGE)" .
+	$(DOCKER) run --rm "$(DOCKER_TEST_IMAGE)"
+
+bonus-docker:
+	@if command -v "$(DOCKER)" >/dev/null; then \
+		$(MAKE) docker-build docker-smoke docker-test; \
+	else \
+		echo "PENDING: Docker is unavailable; run 'make bonus-docker' on Ubuntu with Docker installed."; \
+	fi
+
+site: coverage-html
+	@mkdir -p site
+	$(PY) -m c_analyzer highlight examples/valid/basic.c --format html --output site/highlight.html
+	$(PY) scripts/build_site.py --output site --coverage htmlcov --readme README.md
+	@echo "Static site: site/index.html"
+
+site-serve: site
+	$(PYTHON) -m http.server --directory site 8000
+
+bonus-site: site
+
+infrastructure-check: check-venv
+	$(PYTEST) -q tests/test_bonus
+
+bonus-gate: compile test coverage site infrastructure-check bonus-docker
+	@echo "Bonus infrastructure gate completed locally."
+	@echo "Docker, GitHub Actions, and Pages remain pending until run in their real environments."
+
 cli-help: check-venv
 	$(PY) -m c_analyzer --help
 
@@ -327,5 +399,5 @@ verify: compile test smoke
 
 clean:
 	@find src tests -type d -name __pycache__ -prune -exec rm -rf {} +
-	@rm -rf .pytest_cache output
-	@echo "Removed generated caches and output/. Source files were not touched."
+	@rm -rf .pytest_cache output htmlcov coverage.xml .coverage site
+	@echo "Removed generated caches, coverage, site, and output files. Source files were not touched."
