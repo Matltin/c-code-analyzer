@@ -24,7 +24,7 @@ jobs:
       - name: Install project and site tools
         run: python -m pip install -e ".[dev]"
       - name: Build static site
-        run: make site
+        run: make site PY=python
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

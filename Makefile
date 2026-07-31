@@ -113,7 +113,11 @@ install: check-venv
 	$(PIP) install -e ".[dev]"
 
 check-venv:
-	@test -x "$(PY)" || { echo "ERROR: $(PY) not found. Run 'make setup' first."; exit 2; }
+	@command -v "$(PY)" >/dev/null 2>&1 || { \
+		echo "ERROR: Python executable '$(PY)' was not found."; \
+		echo "Locally run 'make setup'; in CI pass 'PY=python'."; \
+		exit 2; \
+	}
 
 compile: check-venv
 	$(PY) -m compileall -q src

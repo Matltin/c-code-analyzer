@@ -4,8 +4,12 @@ from __future__ import annotations
 
 import subprocess
 import sys
-import tomllib
 from pathlib import Path
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10
+    import tomli as tomllib
 
 
 ROOT = Path(__file__).parents[2]
@@ -18,6 +22,10 @@ def test_coverage_gate_is_at_least_eighty_percent() -> None:
     assert config["tool"]["coverage"]["run"]["branch"] is True
     assert config["tool"]["coverage"]["report"]["fail_under"] >= 80
     assert "pytest-cov>=6.0" in config["project"]["optional-dependencies"]["dev"]
+    assert any(
+        dependency.startswith("tomli>=2.0;")
+        for dependency in config["project"]["optional-dependencies"]["dev"]
+    )
 
 
 def test_ci_workflow_has_required_triggers_matrix_and_checks() -> None:
@@ -30,8 +38,8 @@ def test_ci_workflow_has_required_triggers_matrix_and_checks() -> None:
         'python-version: ["3.10", "3.12"]',
         "python -m compileall -q src",
         "python -m pytest -q",
-        "make coverage",
-        "make highlight-html",
+        "make coverage PY=python",
+        "make highlight-html PY=python",
     ):
         assert expected in text
 
@@ -65,7 +73,7 @@ def test_pages_workflow_builds_and_deploys_site_from_main() -> None:
         "workflow_dispatch:",
         "group: pages",
         "cancel-in-progress: true",
-        "make site",
+        "make site PY=python",
         "actions/configure-pages@v5",
         "actions/upload-pages-artifact@v4",
         "actions/deploy-pages@v4",

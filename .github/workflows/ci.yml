@@ -41,9 +41,9 @@ jobs:
       - name: Install project and test tools
         run: python -m pip install -e ".[dev]"
       - name: Enforce coverage gate
-        run: make coverage
+        run: make coverage PY=python
       - name: Build syntax-highlight sample
-        run: make highlight-html
+        run: make highlight-html PY=python
       - name: Upload coverage reports
         uses: actions/upload-artifact@v6
         with:
