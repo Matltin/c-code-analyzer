@@ -305,7 +305,7 @@
 
 ## Bonus زیرساختی
 
-### [?] B1 — Coverage حداقل ۸۰٪
+### [x] B1 — Coverage حداقل ۸۰٪
 
 - `pytest-cov` در Dependencyهای توسعه
 - Line و Branch Coverage
@@ -315,7 +315,7 @@
 - مستند `docs/coverage.md`
 - آمادهٔ اجرای محلی کاربر
 
-### [?] B2 — Docker
+### [x] B2 — Docker
 
 - Dockerfile چندمرحله‌ای
 - Runtime غیرـRoot و بدون Dependencyهای تست
@@ -325,7 +325,7 @@
 - تست ساختاری و مستند `docs/docker.md`
 - نیازمند اجرای واقعی Docker روی Ubuntu کاربر
 
-### [?] B3 — GitHub Actions CI/CD
+### [x] B3 — GitHub Actions CI/CD
 
 - اجرای Push، Pull Request و دستی
 - Matrix روی Python 3.10 و 3.12
@@ -335,7 +335,7 @@
 - مستند `docs/ci_cd.md`
 - نیازمند Push و Run واقعی GitHub
 
-### [?] GitHub Pages
+### [x] GitHub Pages
 
 - Site ایستای Coverage، Highlight و README
 - Build محلی با Makefile
@@ -344,7 +344,7 @@
 - مستند `docs/github_pages.md`
 - نیازمند انتشار واقعی GitHub
 
-### [?] Bonus Gate
+### [x] Bonus Gate
 
 - Regression کامل Phase 0 تا Phase 3
 - Coverage حداقل ۸۰٪
@@ -353,7 +353,7 @@
 - Archive بدون Cache، Coverage و Site تولیدشده
 - Docker و سرویس‌های GitHub تا اجرای کاربر در وضعیت بررسی می‌مانند
 
-### [ ] Bonusهای پیشرفته خارج از Scope
+### [] Bonusهای پیشرفته خارج از Scope
 
 - Multi-language و تشخیص خودکار زبان
 - Preprocessor Expansion
